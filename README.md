@@ -1,2 +1,0 @@
-# Exam
-Just answer 
