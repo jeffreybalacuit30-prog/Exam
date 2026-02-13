@@ -1,254 +1,386 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Metro Dumaguete College - Ethics Exam</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #333;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-        .container {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            padding: 30px;
-            max-width: 600px;
-            width: 100%;
-            text-align: center;
-        }
-        h1, h2 {
-            color: #4CAF50;
-        }
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        input, select {
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-        button {
-            background: #4CAF50;
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background 0.3s;
-        }
-        button:hover {
-            background: #45a049;
-        }
-        .question {
-            margin: 20px 0;
-        }
-        .options {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .option {
-            background: #f9f9f9;
-            padding: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        .option:hover {
-            background: #e0e0e0;
-        }
-        .timer {
-            font-size: 20px;
-            color: #ff5722;
-            margin: 10px 0;
-        }
-        .result {
-            margin-top: 20px;
-        }
-        .hidden {
-            display: none;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Metro Dumaguete College - Ethics Exam</title>
+
+<style>
+
+body{
+    font-family: Arial;
+    background: linear-gradient(135deg,#667eea,#764ba2);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    margin:0;
+}
+
+.container{
+    background:white;
+    width:600px;
+    max-width:95%;
+    padding:30px;
+    border-radius:10px;
+    box-shadow:0 0 20px rgba(0,0,0,0.2);
+}
+
+h1,h2{
+    text-align:center;
+    color:#4CAF50;
+}
+
+input,select,button{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    border-radius:5px;
+    border:1px solid #ccc;
+    font-size:16px;
+}
+
+button{
+    background:#4CAF50;
+    color:white;
+    border:none;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#45a049;
+}
+
+.option{
+    background:#f1f1f1;
+    padding:12px;
+    margin-top:10px;
+    border-radius:5px;
+    cursor:pointer;
+}
+
+.option:hover{
+    background:#ddd;
+}
+
+.timer{
+    text-align:center;
+    font-size:20px;
+    color:red;
+}
+
+.hidden{
+    display:none;
+}
+
+.result{
+    text-align:center;
+}
+
+</style>
+
 </head>
-<body oncontextmenu="return false;" onkeydown="if(event.keyCode==116){return false;}">
-    <div class="container">
-        <h1>Metro Dumaguete College</h1>
-        <h2>Ethics Exam</h2>
-        
-        <div id="student-info">
-            <h3>Student Information</h3>
-            <form id="info-form">
-                <input type="text" id="name" placeholder="Full Name" required>
-                <input type="text" id="student-id" placeholder="Student ID" required>
-                <select id="year" required>
-                    <option value="">Select Year Level</option>
-                    <option value="1st Year">1st Year</option>
-                    <option value="2nd Year">2nd Year</option>
-                    <option value="3rd Year">3rd Year</option>
-                    <option value="4th Year">4th Year</option>
-                </select>
-                <button type="submit">Start Exam</button>
-            </form>
-        </div>
-        
-        <div id="exam" class="hidden">
-            <div class="timer">Time left: <span id="time">10</span> seconds</div>
-            <div id="question-container">
-                <div class="question" id="question"></div>
-                <div class="options" id="options"></div>
-            </div>
-        </div>
-        
-        <div id="result" class="hidden">
-            <h3>Exam Results</h3>
-            <p id="score"></p>
-            <p id="details"></p>
-        </div>
-    </div>
 
-    <script>
-        // Prevent refresh and other cheating attempts
-        window.onbeforeunload = function() {
-            return "Are you sure you want to leave? Your progress will be lost.";
-        };
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'F5' || (e.ctrlKey && e.key === 'r')) {
-                e.preventDefault();
-            }
-        });
+<body oncontextmenu="return false;">
 
-        const questions = [
-            {
-                question: "1. What is a human act?",
-                options: ["A. An action done without thinking", "B. An action done with knowledge, freedom, and consent", "C. An action done while sleeping", "D. An action done by animals"],
-                correct: "B"
-            },
-            {
-                question: "2. Which of the following is an example of an act of man?",
-                options: ["A. Studying for an exam", "B. Helping a friend", "C. Blinking your eyes", "D. Choosing to lie"],
-                correct: "C"
-            },
-            {
-                question: "3. Which of the following is NOT a determinant of morality?",
-                options: ["A. Object", "B. Intention", "C. Circumstances", "D. Appearance"],
-                correct: "D"
-            },
-            {
-                question: "4. Accountability means:",
-                options: ["A. Ignoring your actions", "B. Being answerable for your actions", "C. Following others blindly", "D. Avoiding responsibility"],
-                correct: "B"
-            },
-            {
-                question: "5. Which is NOT a basis of moral accountability?",
-                options: ["A. Knowledge", "B. Freedom", "C. Voluntariness", "D. Strength"],
-                correct: "D"
-            },
-            {
-                question: "6. Which of the following can modify moral accountability?",
-                options: ["A. Fear", "B. Ignorance", "C. Passion", "D. All of the above"],
-                correct: "D"
-            },
-            {
-                question: "7. Emotions can affect moral decisions by:",
-                options: ["A. Helping people make faster decisions", "B. Preventing all decisions", "C. Removing responsibility", "D. Making decisions illegal"],
-                correct: "A"
-            },
-            {
-                question: "8. What are the minimum requirements of morality?",
-                options: ["A. Knowledge and strength", "B. Reason and impartiality", "C. Emotion and power", "D. Fear and punishment"],
-                correct: "B"
-            },
-            {
-                question: "9. Reason helps a person by:",
-                options: ["A. Avoiding thinking", "B. Making emotional decisions only", "C. Using logic and avoiding fallacies", "D. Ignoring facts"],
-                correct: "C"
-            },
-            {
-                question: "10. According to ethics, the will is:",
-                options: ["A. The ability to sleep", "B. The ability to forget", "C. The ability to decide and choose", "D. The ability to feel emotions"],
-                correct: "C"
-            }
-        ];
+<div class="container">
 
-        let currentQuestion = 0;
-        let score = 0;
-        let timer;
-        let timeLeft = 10;
-        let answers = [];
+<h1>Metro Dumaguete College</h1>
+<h2>Ethics Exam</h2>
 
-        document.getElementById('info-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            document.getElementById('student-info').classList.add('hidden');
-            document.getElementById('exam').classList.remove('hidden');
-            showQuestion();
-            startTimer();
-        });
+<div id="info">
 
-        function showQuestion() {
-            if (currentQuestion < questions.length) {
-                const q = questions[currentQuestion];
-                document.getElementById('question').innerText = q.question;
-                const optionsDiv = document.getElementById('options');
-                optionsDiv.innerHTML = '';
-                q.options.forEach(option => {
-                    const div = document.createElement('div');
-                    div.className = 'option';
-                    div.innerText = option;
-                    div.addEventListener('click', () => selectAnswer(option.charAt(0)));
-                    optionsDiv.appendChild(div);
-                });
-            } else {
-                showResult();
-            }
-        }
+<h3>Student Information</h3>
 
-        function selectAnswer(answer) {
-            answers.push(answer);
-            if (answer === questions[currentQuestion].correct) {
-                score++;
-            }
-            currentQuestion++;
-            clearInterval(timer);
-            timeLeft = 10;
-            showQuestion();
-            startTimer();
-        }
+<input id="name" placeholder="Full Name">
+<input id="id" placeholder="Student ID">
 
-        function startTimer() {
-            timer = setInterval(() => {
-                timeLeft--;
-                document.getElementById('time').innerText = timeLeft;
-                if (timeLeft <= 0) {
-                    selectAnswer(''); // Auto-submit with no answer
-                }
-            }, 1000);
-        }
+<select id="year">
+<option value="">Year Level</option>
+<option>1st Year</option>
+<option>2nd Year</option>
+<option>3rd Year</option>
+<option>4th Year</option>
+</select>
 
-        function showResult() {
-            document.getElementById('exam').classList.add('hidden');
-            document.getElementById('result').classList.remove('hidden');
-            document.getElementById('score').innerText = `You scored ${score} out of ${questions.length}.`;
-            let details = 'Details:\n';
-            questions.forEach((q, i) => {
-                details += `${i+1}. Your answer: ${answers[i] || 'No answer'} | Correct: ${q.correct}\n`;
-            });
-            document.getElementById('details').innerText = details;
-            clearInterval(timer);
-            window.onbeforeunload = null; // Allow refresh after exam
-        }
-    </script>
+<button onclick="startExam()">Start Exam</button>
+
+</div>
+
+<div id="exam" class="hidden">
+
+<div class="timer">
+Time Left: <span id="time">10</span>
+</div>
+
+<h3 id="question"></h3>
+
+<div id="options"></div>
+
+</div>
+
+<div id="result" class="hidden result">
+
+<h2>Exam Finished</h2>
+
+<h3 id="score"></h3>
+
+<button onclick="location.reload()">Restart</button>
+
+</div>
+
+</div>
+
+<script>
+
+function shuffle(array){
+
+for(let i=array.length-1;i>0;i--){
+
+let j=Math.floor(Math.random()*(i+1));
+
+[array[i],array[j]]=[array[j],array[i]];
+
+}
+
+}
+
+let questions=[
+
+{
+question:"What is a human act?",
+options:[
+"A. An action done without thinking",
+"B. An action done with knowledge freedom and consent",
+"C. An action done while sleeping",
+"D. An action done by animals"
+],
+correct:"B"
+},
+
+{
+question:"Example of act of man?",
+options:[
+"A. Studying",
+"B. Helping",
+"C. Blinking eyes",
+"D. Lying"
+],
+correct:"C"
+},
+
+{
+question:"NOT determinant of morality?",
+options:[
+"A. Object",
+"B. Intention",
+"C. Circumstances",
+"D. Appearance"
+],
+correct:"D"
+},
+
+{
+question:"Accountability means?",
+options:[
+"A. Ignore actions",
+"B. Answerable actions",
+"C. Follow blindly",
+"D. Avoid responsibility"
+],
+correct:"B"
+},
+
+{
+question:"NOT basis accountability?",
+options:[
+"A. Knowledge",
+"B. Freedom",
+"C. Voluntariness",
+"D. Strength"
+],
+correct:"D"
+},
+
+{
+question:"Modify accountability?",
+options:[
+"A. Fear",
+"B. Ignorance",
+"C. Passion",
+"D. All above"
+],
+correct:"D"
+},
+
+{
+question:"Emotions affect decision?",
+options:[
+"A. Faster decision",
+"B. Prevent decision",
+"C. Remove responsibility",
+"D. Illegal decision"
+],
+correct:"A"
+},
+
+{
+question:"Minimum morality requirement?",
+options:[
+"A. Knowledge strength",
+"B. Reason impartiality",
+"C. Emotion power",
+"D. Fear punishment"
+],
+correct:"B"
+},
+
+{
+question:"Reason helps?",
+options:[
+"A. Avoid thinking",
+"B. Emotional only",
+"C. Use logic",
+"D. Ignore facts"
+],
+correct:"C"
+},
+
+{
+question:"Will is?",
+options:[
+"A. Sleep",
+"B. Forget",
+"C. Decide choose",
+"D. Feel emotion"
+],
+correct:"C"
+}
+
+];
+
+shuffle(questions);
+
+questions.forEach(q=>shuffle(q.options));
+
+let index=0;
+let score=0;
+let timer;
+let time=10;
+
+function startExam(){
+
+let name=document.getElementById("name").value;
+
+if(name==""){
+
+alert("Enter name");
+
+return;
+
+}
+
+document.getElementById("info").classList.add("hidden");
+
+document.getElementById("exam").classList.remove("hidden");
+
+showQuestion();
+
+startTimer();
+
+}
+
+function showQuestion(){
+
+if(index>=questions.length){
+
+finish();
+
+return;
+
+}
+
+let q=questions[index];
+
+document.getElementById("question").innerText=(index+1)+". "+q.question;
+
+let optionsDiv=document.getElementById("options");
+
+optionsDiv.innerHTML="";
+
+q.options.forEach(opt=>{
+
+let div=document.createElement("div");
+
+div.className="option";
+
+div.innerText=opt;
+
+div.onclick=function(){
+
+answer(opt.charAt(0));
+
+};
+
+optionsDiv.appendChild(div);
+
+});
+
+}
+
+function answer(ans){
+
+if(ans==questions[index].correct){
+
+score++;
+
+}
+
+index++;
+
+time=10;
+
+showQuestion();
+
+}
+
+function startTimer(){
+
+timer=setInterval(()=>{
+
+time--;
+
+document.getElementById("time").innerText=time;
+
+if(time==0){
+
+index++;
+
+time=10;
+
+showQuestion();
+
+}
+
+},1000);
+
+}
+
+function finish(){
+
+clearInterval(timer);
+
+document.getElementById("exam").classList.add("hidden");
+
+document.getElementById("result").classList.remove("hidden");
+
+document.getElementById("score").innerText=
+
+"Score: "+score+" / "+questions.length;
+
+}
+
+</script>
+
 </body>
 </html>
